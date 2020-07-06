@@ -41,22 +41,24 @@ clear all;
 % weighting (by patients) as described in the PNAS paper. Comment the below
 % out if there is user-provided "msa_aa" and "weight_seq"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+addpath('Helper Functions')
+addpath('3rd Party Code')
 test_example=1; % load the test example
 if test_example==1
     fasta_name = 'hivgp160_processed_MSA.fasta';
-    load hivgp160_patient_weighting
+    load hivgp160_patient_weight
     [Header_fasta, Sequence_fasta] = fastaread(fasta_name);
     msa_aa = cell2mat(Sequence_fasta');
+    %%weight_seq = cell2mat(weight_patient)
 
     % For testing purposes, reduce the number of sequences and residues
     % for faster computation
     
-    num_seq_test=1000; % number of sequences used for testing
+    num_seq_test=100; % number of sequences used for testing
     num_residue_test = 70; % number of residues used in testing
     
     msa_aa = msa_aa(1:num_seq_test,1:num_residue_test); % amino acid MSA
-    weight_seq = weight_seq(1:num_seq_test); % weight of each sequence
+    %%weight_seq = weight_seq(1:num_seq_test); % weight of each sequence
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,10 +67,11 @@ end
 
 % % Set default weight_seq if not specified by user
 % num_seq = size(msa_aa,1); % number of sequences
-% if ~exist('weight_seq')
-%     % set equal weighting if weighting vector not provided
-%     weight_seq = ones(num_seq,1);
-% end
+ if ~exist('weight_seq')
+       %set equal weighting if weighting vector not provided
+     %%weight_seq = ones(num_seq,1);
+     weight_seq = ones(num_seq_test,1);
+ end
 
 % num_patients = sum(weight_seq); % number of patients
 
